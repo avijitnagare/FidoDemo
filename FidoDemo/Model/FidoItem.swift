@@ -32,14 +32,14 @@ final class FidoItem: Codable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, isFavorite, itemDescription, imageUrl, syncStatus
+        case id, name, favorite, itemDescription, imageUrl, syncStatus
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(Int.self, forKey: .id)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
-        self.favorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
+        self.favorite = try container.decodeIfPresent(Bool.self, forKey: .favorite) ?? false
         self.itemDescription = try container.decodeIfPresent(String.self, forKey: .itemDescription)
         self.imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         self.syncStatus = try container.decodeIfPresent(Bool.self, forKey: .syncStatus) ?? false
@@ -51,7 +51,7 @@ final class FidoItem: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
-        try container.encode(favorite, forKey: .isFavorite)
+        try container.encode(favorite, forKey: .favorite)
         try container.encode(itemDescription, forKey: .itemDescription)
         try container.encode(imageUrl, forKey: .imageUrl)
         try container.encode(syncStatus, forKey: .syncStatus)

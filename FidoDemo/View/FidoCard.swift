@@ -10,6 +10,7 @@ import SDWebImage
 
 struct FidoCard: View {
     var item: FidoItem
+    var onFavoriteTapped: ((FidoItem) -> Void)? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: Constants.size8) {
@@ -43,8 +44,15 @@ struct FidoCard: View {
     
     private var heartAndLabelView: some View {
         HStack(spacing: Constants.size8) {
-            Image(systemName: item.favorite ? "heart.fill" : "heart")
-                .foregroundStyle(item.favorite ? .red : .secondary)
+            Button {
+                onFavoriteTapped?(item)
+            } label: {
+                Image(systemName: item.favorite ? "heart.fill" : "heart")
+                    .foregroundStyle(item.favorite ? .red : .secondary)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            
             Text(item.name?.isEmpty == false ? (item.name ?? "") : "Untitled")
                 .font(.headline)
         }
@@ -76,3 +84,4 @@ struct FidoCard: View {
         .transition(.fade(duration: 0.3))
     }
 }
+

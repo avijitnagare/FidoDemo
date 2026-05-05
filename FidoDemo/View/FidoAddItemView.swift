@@ -15,7 +15,7 @@ struct FidoAddItemView: View {
     private var addItemViewModel = FidoAddItemViewModel()
 
     @State private var nameText: String = ""
-    @State private var isFavorite: Bool = false
+    @State private var favorite: Bool = false
     @State private var descriptionText: String = ""
     @State private var isShowingAlert = false
     
@@ -26,7 +26,7 @@ struct FidoAddItemView: View {
                     TextField(addItemViewModel.nameTitle, text: $nameText)
                         .textInputAutocapitalization(.words)
                         .autocorrectionDisabled(false)
-                    Toggle(addItemViewModel.favoriteTitle, isOn: $isFavorite)
+                    Toggle(addItemViewModel.favoriteTitle, isOn: $favorite)
                     VStack(alignment: .leading, spacing: 8) {
                         Text(addItemViewModel.descriptionTitle)
                             .font(.subheadline)
@@ -69,7 +69,7 @@ struct FidoAddItemView: View {
             let fido = FidoItem(timestamp: Date())
             fido.name = nameText
             fido.itemDescription = descriptionText
-            fido.favorite = isFavorite
+            fido.favorite = favorite
             fido.syncStatus = false
             Task {
                 let success = await APIService.shared.addFidoItem(fido, isPost: true)

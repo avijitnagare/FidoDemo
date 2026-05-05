@@ -35,7 +35,9 @@ struct FidoMainView: View {
                                 FidoItemDetailView(item: item)
                                     .padding()
                             } label: {
-                                FidoCard(item: item)
+                                FidoCard(item: item) { tappedItem in
+                                    toggleFavoriteAndSave(tappedItem)
+                                }
                             }
                             .buttonStyle(.plain) // Keep card look
                             .contextMenu {
@@ -60,9 +62,6 @@ struct FidoMainView: View {
             
             .navigationTitle(mainViewModel.navTitle)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton().disabled(true) // No effect in grid; disabled
-                }
                 ToolbarItem {
                     Button {
                         showingAdd = true
@@ -87,6 +86,35 @@ struct FidoMainView: View {
     private func delete(item: FidoItem) {
         withAnimation {
             mainViewModel.deleteFido(item: item)
+        }
+    }
+    
+    private func toggleFavoriteAndSave(_ item: FidoItem) {
+        // Optimistic local toggle
+        item.favorite.toggle()
+        do {
+            try dataManager.saveIfNeeded()
+        } catch {
+            // Revert on failure to save locally
+            item.favorite.toggle()
+            print("Failed to save favorite toggle locally: \(error)")
+            return
+        }
+        // Sync to backend
+        Task {
+            // Use PUT (isPost: false) to update existing item on server
+            let success = await APIService.shared.addFidoItem(item, isPost: false)
+            if !success {
+                // Revert if server update failed
+                await MainActor.run {
+                    item.favorite.toggle()
+                    do {
+                        try dataManager.saveIfNeeded()
+                    } catch {
+                        print("Failed to revert favorite after server error: \(error)")
+                    }
+                }
+            }
         }
     }
 }

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A3398B172FAA3C590008CFE8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A3398B162FAA3C590008CFE8 /* SDWebImageSwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A3AA9FF52FAA2D8D00709E45 /* FidoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FidoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3398B172FAA3C590008CFE8 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = FidoDemo;
 			packageProductDependencies = (
+				A3398B162FAA3C590008CFE8 /* SDWebImageSwiftUI */,
 			);
 			productName = FidoDemo;
 			productReference = A3AA9FF52FAA2D8D00709E45 /* FidoDemo.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = A3AA9FEC2FAA2D8D00709E45;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A3398B152FAA3C590008CFE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A3AA9FF62FAA2D8D00709E45 /* Products */;
 			projectDirPath = "";
@@ -328,6 +337,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A3398B152FAA3C590008CFE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A3398B162FAA3C590008CFE8 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A3398B152FAA3C590008CFE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A3AA9FED2FAA2D8D00709E45 /* Project object */;
 }

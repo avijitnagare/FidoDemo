@@ -8,9 +8,6 @@
 import SwiftUI
 import SwiftData
 
-import SwiftUI
-import SwiftData
-
 struct FidoMainView: View {
     
     @Environment(DataManager.self) private var dataManager

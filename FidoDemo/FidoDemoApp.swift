@@ -7,9 +7,22 @@
 
 import SwiftUI
 import SwiftData
+import SDWebImage
 
 @main
 struct FidoDemoApp: App {
+    
+    
+    init() {
+        // Enable built-in scaling for all images automatically
+        SDWebImageManager.shared.optionsProcessor = SDWebImageOptionsProcessor { url, options, context in
+            var mutableOptions = options
+            // Example: Force all images to be treated as high-priority
+            mutableOptions.insert(.highPriority)
+            return SDWebImageOptionsResult(options: mutableOptions, context: context)
+        }
+    }
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             FidoItem.self,

@@ -6,6 +6,8 @@
 //
 import SwiftUI
 import SwiftData
+import SDWebImageSwiftUI
+import SDWebImage
 
 struct FidoItemDetailView: View {
 
@@ -13,13 +15,7 @@ struct FidoItemDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            AsyncImage(url: URL(string: item.imageUrl ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } placeholder: {
-                ProgressView()
-            }
+            imageView
             
             HStack(spacing: 8) {
                 Image(systemName: item.isFavorite ? "heart.fill" : "heart")
@@ -34,6 +30,35 @@ struct FidoItemDetailView: View {
         }
         .padding()
         .navigationTitle(item.name ?? "Unknown Item")
+    }
+    
+    private var imageView: some View {
+        WebImage(
+            url: URL(string: item.imageUrl ?? ""),
+            context: [
+                .imageThumbnailPixelSize: CGSize(width: 200, height: 200),
+                .queryCacheType: SDImageCacheType.all.rawValue            // Ensures it checks Disk + Memory
+            ]
+        ) { image in
+            image
+                .resizable()
+                .scaledToFit() // Prevents squishing dog photos
+        } placeholder: {
+            // Show this while downloading
+            ZStack {
+                Color.gray.opacity(0.1)
+                ProgressView()
+            }
+        }
+        .onSuccess { image, data, cacheType in
+            // This proves the cache is working!
+            print("Loaded from: \(cacheType == .disk ? "Disk" : "Network/Memory")")
+        }
+        .indicator(.activity)
+        .transition(.fade(duration: 0.3))
+        .frame(width: 180, height: 180)
+        .clipped()
+        .cornerRadius(12)
     }
 }
 

@@ -64,11 +64,24 @@ struct FidoAddItemView: View {
             isShowingAlert = true
             return
         }
-        dataManager.insertNewItem(
-            name: nameText,
-            isFavorite: isFavorite,
-            description: descriptionText
-        )
+        if FidoNetworkManager.shared.isInternetAvailable() {
+            print("Connected to internet...")
+            let fido = FidoItem(timestamp: Date())
+            fido.name = nameText
+            fido.itemDescription = descriptionText
+            fido.favorite = isFavorite
+            fido.syncStatus = false
+            Task {
+                let success = await APIService.shared.addFidoItem(fido, isPost: true)
+                if success {
+                    fido.syncStatus = true
+                }
+                dataManager.insertNewItem(item: fido)
+            }
+        } else {
+            print("Offline")
+        }
+       
         dismiss()
     }
 }

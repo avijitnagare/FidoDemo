@@ -36,7 +36,26 @@ class APIService {
             .store(in: &APIService.cancellables)
     }
     
-    func addFidoItem(_ item: FidoItem, completion: @escaping (Bool) -> Void) {
+    func addFidoItem(_ item: FidoItem, isPost: Bool = true) async -> Bool {
+        let url = isPost ? URL(string: APIService.endPoint)! : URL(string: "\(APIService.endPoint)/\(item.id ?? 0)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = isPost ? "POST" :"PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
+        do {
+            request.httpBody = try JSONEncoder().encode(item)
+            
+            // Perform the request
+            let (_, response) = try await URLSession.shared.data(for: request)
+            
+            // Check if the status code is 200 OK
+            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                return true
+            }
+            return false
+        } catch {
+            print("Update error: \(error)")
+            return false
+        }
     }
 }

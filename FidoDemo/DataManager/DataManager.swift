@@ -24,11 +24,7 @@ final class DataManager {
 
     // Example convenience APIs
 
-    func insertNewItem(name: String?, isFavorite: Bool, description: String?) {
-        let item = FidoItem(timestamp: Date())
-        item.name = name?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
-        item.favorite = isFavorite
-        item.itemDescription = description?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
+    func insertNewItem(item: FidoItem) {
         modelContext.insert(item)
     }
 

@@ -43,8 +43,8 @@ struct FidoCard: View {
     
     private var heartAndLabelView: some View {
         HStack(spacing: Constants.size8) {
-            Image(systemName: item.isFavorite ? "heart.fill" : "heart")
-                .foregroundStyle(item.isFavorite ? .red : .secondary)
+            Image(systemName: item.favorite ? "heart.fill" : "heart")
+                .foregroundStyle(item.favorite ? .red : .secondary)
             Text(item.name?.isEmpty == false ? (item.name ?? "") : "Untitled")
                 .font(.headline)
         }

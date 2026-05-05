@@ -13,7 +13,7 @@ final class FidoItem: Codable {
     @Attribute(.unique) var id: Int?
     var timestamp: Date
     var name: String?
-    var isFavorite: Bool = false
+    var favorite: Bool = false
     var itemDescription: String?
     var imageUrl: String?
     
@@ -25,7 +25,7 @@ final class FidoItem: Codable {
     init(timestamp: Date, name: String? = nil, isFavorite: Bool = false) {
         self.timestamp = timestamp
         self.name = name
-        self.isFavorite = isFavorite
+        self.favorite = isFavorite
     }
 
     enum CodingKeys: String, CodingKey {
@@ -36,7 +36,7 @@ final class FidoItem: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(Int.self, forKey: .id)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
-        self.isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
+        self.favorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
         self.itemDescription = try container.decodeIfPresent(String.self, forKey: .itemDescription)
         self.imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         
@@ -48,7 +48,7 @@ final class FidoItem: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
-        try container.encode(isFavorite, forKey: .isFavorite)
+        try container.encode(favorite, forKey: .isFavorite)
         try container.encode(itemDescription, forKey: .itemDescription)
         try container.encode(imageUrl, forKey: .imageUrl)
     }

@@ -18,8 +18,8 @@ struct FidoItemDetailView: View {
             imageView
             
             HStack(spacing: 8) {
-                Image(systemName: item.isFavorite ? "heart.fill" : "heart")
-                    .foregroundStyle(item.isFavorite ? .red : .secondary)
+                Image(systemName: item.favorite ? "heart.fill" : "heart")
+                    .foregroundStyle(item.favorite ? .red : .secondary)
                
             }
             if let desc = item.itemDescription, !desc.isEmpty {

@@ -27,7 +27,7 @@ final class DataManager {
     func insertNewItem(name: String?, isFavorite: Bool, description: String?) {
         let item = FidoItem(timestamp: Date())
         item.name = name?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
-        item.isFavorite = isFavorite
+        item.favorite = isFavorite
         item.itemDescription = description?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
         modelContext.insert(item)
     }

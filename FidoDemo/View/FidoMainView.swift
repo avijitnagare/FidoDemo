@@ -71,7 +71,11 @@ struct FidoMainView: View {
                 }
             }
             .onAppear() {
-                mainViewModel.getAllItems()
+                if FidoNetworkManager.shared.isInternetAvailable() {
+                    mainViewModel.getAllItems()
+                } else {
+                    mainViewModel.isLoading = false
+                }
             }
         } detail: {
             Text("Select an item")

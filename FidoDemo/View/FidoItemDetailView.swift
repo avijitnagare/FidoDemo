@@ -11,16 +11,21 @@ import SDWebImage
 
 struct FidoItemDetailView: View {
 
+    @Environment(DataManager.self) private var dataManager
     let item: FidoItem
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             imageView
-            
             HStack(spacing: 8) {
-                Image(systemName: item.favorite ? "heart.fill" : "heart")
-                    .foregroundStyle(item.favorite ? .red : .secondary)
-               
+                Button {
+                    toggleFavoriteAndSync()
+                } label: {
+                    Image(systemName: item.favorite ? "heart.fill" : "heart")
+                        .foregroundStyle(item.favorite ? .red : .secondary)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
             if let desc = item.itemDescription, !desc.isEmpty {
                 Text(desc)
@@ -57,5 +62,34 @@ struct FidoItemDetailView: View {
         .indicator(.activity)
         .transition(.fade(duration: 0.3))
     }
-}
 
+    // MARK: - Actions
+
+    private func toggleFavoriteAndSync() {
+        // Optimistic local toggle
+        item.favorite.toggle()
+        do {
+            try dataManager.saveIfNeeded()
+        } catch {
+            // Revert if local save fails
+            item.favorite.toggle()
+            print("Failed to save favorite toggle locally: \(error)")
+            return
+        }
+
+        // Sync to backend with PUT
+        Task {
+            let success = await APIService.shared.addFidoItem(item, isPost: false)
+            if !success {
+                await MainActor.run {
+                    item.favorite.toggle()
+                    do {
+                        try dataManager.saveIfNeeded()
+                    } catch {
+                        print("Failed to revert favorite after server error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+}

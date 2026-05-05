@@ -11,6 +11,10 @@ import SwiftData
 @Model
 final class FidoItem {
     var timestamp: Date
+    var name: String?
+    var isFavorite: Bool = false
+    var itemDescription: String?
+    var imageUrl: String?
     
     init(timestamp: Date) {
         self.timestamp = timestamp

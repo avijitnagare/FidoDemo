@@ -22,11 +22,16 @@ struct FidoDemoApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
+    var dataManager: DataManager {
+        DataManager(container: sharedModelContainer)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            FidoMainView(dataManager: dataManager)
         }
         .modelContainer(sharedModelContainer)
+        .environment(dataManager)
     }
 }

@@ -56,9 +56,6 @@ struct FidoItemDetailView: View {
         }
         .indicator(.activity)
         .transition(.fade(duration: 0.3))
-        .frame(width: 180, height: 180)
-        .clipped()
-        .cornerRadius(12)
     }
 }
 

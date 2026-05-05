@@ -5,46 +5,74 @@
 //  Created by Avijit Nagare on 2026-05-04.
 //
 import SwiftUI
+import SDWebImageSwiftUI
+import SDWebImage
 
 struct FidoCard: View {
     var item: FidoItem
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            AsyncImage(url: URL(string: item.imageUrl ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } placeholder: {
-                ProgressView()
-            }
-            
-            HStack(spacing: 8) {
-                Image(systemName: item.isFavorite ? "heart.fill" : "heart")
-                    .foregroundStyle(item.isFavorite ? .red : .secondary)
-                Text(item.name?.isEmpty == false ? (item.name ?? "") : "Untitled")
-                    .font(.headline)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-            }
-            if let desc = item.itemDescription, !desc.isEmpty {
-                Text(desc)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
-                    .multilineTextAlignment(.leading)
-            }
+        VStack(alignment: .leading, spacing: Constants.size8) {
+            mainViewImage
+            heartAndLabelView
+            descriptionView
         }
-        .padding(12)
+        .padding(Constants.size12)
         .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
         .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: Constants.size12, style: .continuous)
                 .fill(Color(.secondarySystemBackground))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: Constants.size12, style: .continuous)
                 .stroke(Color.secondary.opacity(0.15))
         )
-        .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: Constants.size12, style: .continuous))
+    }
+    
+    @ViewBuilder
+    private var descriptionView: some View {
+        if let desc = item.itemDescription, !desc.isEmpty {
+            Text(desc)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(3)
+                .multilineTextAlignment(.leading)
+        }
+    }
+    
+    private var heartAndLabelView: some View {
+        HStack(spacing: Constants.size8) {
+            Image(systemName: item.isFavorite ? "heart.fill" : "heart")
+                .foregroundStyle(item.isFavorite ? .red : .secondary)
+            Text(item.name?.isEmpty == false ? (item.name ?? "") : "Untitled")
+                .font(.headline)
+        }
+    }
+    
+    private var mainViewImage: some View {
+        WebImage(
+            url: URL(string: item.imageUrl ?? ""),
+            context: [
+                .imageThumbnailPixelSize: CGSize(width: 200, height: 200),
+                .queryCacheType: SDImageCacheType.all.rawValue            // Ensures it checks Disk + Memory
+            ]
+        ) { image in
+            image
+                .resizable()
+                .scaledToFit() // Prevents squishing dog photos
+        } placeholder: {
+            // Show this while downloading
+            ZStack {
+                Color.gray.opacity(0.1)
+                ProgressView()
+            }
+        }
+        .onSuccess { image, data, cacheType in
+            // This proves the cache is working!
+            print("Loaded from: \(cacheType == .disk ? "Disk" : "Network/Memory")")
+        }
+        .indicator(.activity)
+        .transition(.fade(duration: 0.3))
     }
 }

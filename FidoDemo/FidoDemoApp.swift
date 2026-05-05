@@ -12,6 +12,7 @@ import SDWebImage
 @main
 struct FidoDemoApp: App {
     
+    @StateObject var toastManager = ToastManager.shared
     
     init() {
         // Enable built-in scaling for all images automatically
@@ -43,6 +44,23 @@ struct FidoDemoApp: App {
     var body: some Scene {
         WindowGroup {
             FidoMainView(dataManager: dataManager)
+                .overlay(
+                    ZStack {
+                        if toastManager.show {
+                            VStack {
+                                Spacer()
+                                Text(toastManager.message)
+                                    .font(.subheadline)
+                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 20)
+                                    .background(Capsule().fill(.black.opacity(0.8)))
+                                    .foregroundColor(.white)
+                                    .padding(.bottom, 50)
+                            }
+                            .transition(.opacity)
+                        }
+                    }
+                )
         }
         .modelContainer(sharedModelContainer)
         .environment(dataManager)

@@ -79,7 +79,7 @@ struct FidoAddItemView: View {
                 dataManager.insertNewItem(item: fido)
             }
         } else {
-            print("Offline")
+            ToastManager.shared.show(text: "Saved offline: \(nameText)")
         }
        
         dismiss()

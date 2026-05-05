@@ -35,7 +35,8 @@ struct FidoMainView: View {
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(items) { item in
                             NavigationLink {
-                               Text("Nav")
+                                FidoItemDetailView(item: item)
+                                    .padding()
                             } label: {
                                 FidoCard(item: item)
                             }

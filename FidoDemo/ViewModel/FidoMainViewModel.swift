@@ -24,7 +24,16 @@ class FidoMainViewModel: ObservableObject {
     }
     
     func getAllItems() {
-        
+        isLoading = true
+        APIService.shared.fetchItems { [weak self] result in
+            print("\(result)")
+            DispatchQueue.main.async {
+                for item in result {
+                    self?.dataManager.modelContext.insert(item)
+                }
+                self?.isLoading = false
+            }
+        }
     }
 }
 
